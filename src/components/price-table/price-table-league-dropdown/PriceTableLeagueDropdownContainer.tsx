@@ -10,7 +10,7 @@ export type PriceTableFilterForm = {
 };
 
 const PriceTableLeagueDropdownContainer = () => {
-  const { uiStateStore, leagueStore, accountStore } = useStores();
+  const { uiStateStore, leagueStore, accountStore, priceStore } = useStores();
   const { t } = useTranslation();
 
   const validationSchema = Yup.object<PriceTableFilterForm>().shape({
@@ -19,19 +19,27 @@ const PriceTableLeagueDropdownContainer = () => {
 
   const leagueId = uiStateStore!.selectedPriceTableLeagueId;
   const activeLeagueId = accountStore!.getSelectedAccount.activePriceLeague?.id;
+  const selectedLeagueId = leagueId || activeLeagueId || '';
 
   useEffect(() => {
-    if (!leagueId) {
-      uiStateStore!.setSelectedPriceTableLeagueId(activeLeagueId || '');
+    if (!selectedLeagueId) {
+      return;
     }
-  }, []);
+
+    if (leagueId !== selectedLeagueId) {
+      uiStateStore!.setSelectedPriceTableLeagueId(selectedLeagueId);
+    }
+
+    priceStore!.ensurePricesForLeague(selectedLeagueId);
+  }, [leagueId, priceStore, selectedLeagueId, uiStateStore]);
 
   const initialValues: PriceTableFilterForm = useMemo(() => {
-    return { priceLeague: leagueId || '' };
-  }, [leagueId]);
+    return { priceLeague: selectedLeagueId };
+  }, [selectedLeagueId]);
 
   const onSubmit = (form: PriceTableFilterForm) => {
     uiStateStore!.setSelectedPriceTableLeagueId(form.priceLeague);
+    priceStore!.ensurePricesForLeague(form.priceLeague);
   };
 
   return (
