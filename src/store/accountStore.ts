@@ -36,9 +36,9 @@ export class AccountStore {
     });
 
     autorun(() => {
-      if (this.getSelectedAccount?.activeLeague) {
+      if (this.getSelectedAccount?.activePriceLeague) {
         rootStore.uiStateStore.setSelectedPriceTableLeagueId(
-          this.getSelectedAccount?.activeLeague.id
+          this.getSelectedAccount.activePriceLeague.id
         );
       }
     });
@@ -243,10 +243,13 @@ export class AccountStore {
                 leagues.concat(getCharacterLeagues(characters)).map((l) => l.id)
               );
 
-              // at initial launch, fetch prices for all leagues
-              this.rootStore.priceStore.getPricesForLeagues(
-                this.rootStore.leagueStore.priceLeagues.map((l) => l.id)
-              );
+              const initialPriceLeagueId =
+                this.getSelectedAccount.activeProfile?.activePriceLeagueId ||
+                this.rootStore.leagueStore.priceLeagues[0]?.id;
+
+              if (initialPriceLeagueId) {
+                this.rootStore.priceStore.ensurePricesForLeague(initialPriceLeagueId);
+              }
 
               return forkJoin(
                 of(account.accountLeagues).pipe(
