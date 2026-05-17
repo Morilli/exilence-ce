@@ -39,19 +39,7 @@ export class PriceStore {
           const activePriceLeagueId = this.rootStore.accountStore.getSelectedAccount
             .activePriceLeague?.id;
           if (!this.rootStore.uiStateStore.isSnapshotting && activePriceLeagueId) {
-            const leaguePriceDetails = rootStore.priceStore.getLeaguePriceDetails(
-              activePriceLeagueId
-            );
-            const leaguePriceSource = rootStore.priceStore.getLeaguePriceSource(leaguePriceDetails);
-
-            const minutesAgo = moment().utc().subtract(this.pollingIntervalMinutes, 'minutes');
-            const fetchedRecently = moment(leaguePriceSource.pricedFetchedAt)
-              .utc()
-              .isAfter(minutesAgo);
-
-            if (!fetchedRecently) {
-              return of(this.getPricesForLeagues([activePriceLeagueId]));
-            }
+            this.ensurePricesForLeague(activePriceLeagueId);
           }
           return of(null);
         })
@@ -186,6 +174,26 @@ export class PriceStore {
     }
 
     return leaguePriceSource;
+  }
+
+  @action
+  ensurePricesForLeague(leagueId: string, force: boolean = false) {
+    if (!leagueId) {
+      return;
+    }
+
+    const leaguePriceDetails = this.getLeaguePriceDetails(leagueId);
+    const leaguePriceSource = this.getLeaguePriceSource(leaguePriceDetails);
+    const minutesAgo = moment().utc().subtract(this.pollingIntervalMinutes, 'minutes');
+    const fetchedRecently = leaguePriceSource.pricedFetchedAt
+      ? moment(leaguePriceSource.pricedFetchedAt).utc().isAfter(minutesAgo)
+      : false;
+
+    if (!force && leaguePriceSource.prices.length > 0 && fetchedRecently) {
+      return;
+    }
+
+    this.getPricesForLeagues([leagueId]);
   }
 
   @action
