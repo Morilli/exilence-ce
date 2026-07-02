@@ -23,13 +23,9 @@ export const poeninjaService = {
 };
 
 function getCurrencyCategories() {
-  const categories = ['Currency', 'Fragment'];
-  return categories;
-}
-
-function getItemCategories() {
-  // commented categories are mostly in accuracy pricing
   const categories = [
+    'Currency',
+    'Fragment',
     'Oil',
     'Incubator',
     'Scarab',
@@ -37,10 +33,22 @@ function getItemCategories() {
     'Resonator',
     'Essence',
     'DivinationCard',
-    //'Prophecy',
-    'SkillGem',
     'Tattoo',
     'Omen',
+    'DeliriumOrb',
+    'Artifact',
+    'Omen',
+    'AllflameEmber',
+    'Runegraft',
+  ];
+  return categories;
+}
+
+function getItemCategories() {
+  // commented categories are mostly in accuracy pricing
+  const categories = [
+    //'Prophecy',
+    'SkillGem',
     'UniqueMap',
     'Map',
     'UniqueJewel',
@@ -50,20 +58,16 @@ function getItemCategories() {
     'UniqueRelic',
     //'Watchstone',
     'UniqueAccessory',
-    'DeliriumOrb',
     'Beast',
     'Vial',
     'Invitation',
-    'Artifact',
     'Memory',
     //'ClusterJewel',
     'BlightedMap',
     'BlightRavagedMap',
     'Coffin',
-    'AllflameEmber',
     //'BaseType',
     //'HelmetEnchant',
-    'KalguuranRune',
   ];
   return categories;
 }
