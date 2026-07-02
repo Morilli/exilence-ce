@@ -1,5 +1,5 @@
 name: Building Exilence-CE for all Platforms
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   build-win:
