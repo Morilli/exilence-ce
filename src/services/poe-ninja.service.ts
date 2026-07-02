@@ -71,7 +71,7 @@ function getItemCategories() {
 function getItemCategoryOverview(league: string, type: string) {
   const parameters = `?league=${league}&type=${type}`;
   return rateLimiter.limit(
-    from(axios.get<IPoeNinjaItemOverview>(`${apiUrl}/stash/current/overview${parameters}`))
+    from(axios.get<IPoeNinjaItemOverview>(`${apiUrl}/stash/current/item/overview${parameters}`))
   );
 }
 
